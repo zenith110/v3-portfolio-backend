@@ -2,95 +2,8 @@
 
 package model
 
-import (
-	"github.com/99designs/gqlgen/graphql"
-)
-
-type AccessCode struct {
-	StatusCode    string `json:"statusCode"`
-	AllowedAccess bool   `json:"allowedAccess"`
-}
-
-type Article struct {
-	Title       string  `json:"title"`
-	TitleCard   string  `json:"titleCard"`
-	Author      *Author `json:"author"`
-	ContentData string  `json:"contentData"`
-	DateWritten string  `json:"dateWritten"`
-	URL         string  `json:"url"`
-	Description string  `json:"description"`
-	UUID        string  `json:"uuid"`
-	Tags        []Tag   `json:"tags"`
-}
-
-type ArticleTag struct {
-	Keyword string `json:"keyword"`
-}
-
-type ArticleTagInput struct {
-	Keyword string `json:"keyword"`
-}
-
-type Articles struct {
-	Article []Article `json:"article"`
-	Total   int       `json:"total"`
-}
-
-type Author struct {
-	Name    string `json:"name"`
-	Profile string `json:"profile"`
-	Picture string `json:"picture"`
-}
-
-type AuthorInput struct {
-	Name    string `json:"name"`
-	Profile string `json:"profile"`
-	Picture string `json:"picture"`
-}
-
-type CreateArticleInfo struct {
-	Title       *string   `json:"title"`
-	TitleCard   *File     `json:"titleCard"`
-	Author      *string   `json:"author"`
-	ContentData *string   `json:"contentData"`
-	DateWritten *string   `json:"dateWritten"`
-	URL         *string   `json:"url"`
-	Description *string   `json:"description"`
-	UUID        *string   `json:"uuid"`
-	Tags        []TagData `json:"tags"`
-}
-
-type DeleteBucketInfo struct {
-	UUID       *string `json:"uuid"`
-	BucketName *string `json:"bucketName"`
-}
-
-type File struct {
-	Name        *string         `json:"name"`
-	FileData    *graphql.Upload `json:"fileData"`
-	ContentType *string         `json:"contentType"`
-	Description *string         `json:"description"`
-	URL         *string         `json:"url"`
-}
-
-type GalleryImages struct {
-	Images []Image `json:"images"`
-}
-
 type GithubProjects struct {
 	Projects []*Project `json:"projects"`
-}
-
-type Image struct {
-	URL         string `json:"url"`
-	Type        string `json:"type"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type LoginUser struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
 }
 
 type Project struct {
@@ -105,20 +18,4 @@ type Project struct {
 
 type Tag struct {
 	Language string `json:"language"`
-}
-
-type TagData struct {
-	Name *string `json:"name"`
-}
-
-type UpdatedArticleInfo struct {
-	Title       *string   `json:"title"`
-	TitleCard   *File     `json:"titleCard"`
-	Author      *string   `json:"author"`
-	ContentData *string   `json:"contentData"`
-	DateWritten *string   `json:"dateWritten"`
-	URL         *string   `json:"url"`
-	Description *string   `json:"description"`
-	UUID        *string   `json:"uuid"`
-	Tags        []TagData `json:"tags"`
 }
