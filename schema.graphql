@@ -20,7 +20,10 @@ type Project {
   topics: [String!]!
   deploymentlink: String!
 }
-
+type NotionGoal{
+  Goals: String!
+}
 type GithubProjects {
   projects: [Project]!
 }
+

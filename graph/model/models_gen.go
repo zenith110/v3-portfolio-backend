@@ -6,6 +6,10 @@ type GithubProjects struct {
 	Projects []*Project `json:"projects"`
 }
 
+type NotionGoal struct {
+	Goals string `json:"Goals"`
+}
+
 type Project struct {
 	Name           string   `json:"name"`
 	Githublink     string   `json:"githublink"`
