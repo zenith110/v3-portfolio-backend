@@ -18,6 +18,18 @@ func (r *queryResolver) GithubProjects(ctx context.Context) (*model.GithubProjec
 	return github, err
 }
 
+func (r *queryResolver) NotionGoals(ctx context.Context) (*model.NotionGoals, error) {
+	intergrationToken := os.Getenv("INTERGRATIONTOKEN")
+	notionGoals, err := routes.FetchNotionPage(intergrationToken)
+	return notionGoals, err
+}
+
+func (r *queryResolver) Profile(ctx context.Context) (*model.GithubBio, error) {
+	githubUser := os.Getenv("GITHUBUSER")
+	githubBio, err := routes.GrabProfileData(githubUser)
+	return githubBio, err
+}
+
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 

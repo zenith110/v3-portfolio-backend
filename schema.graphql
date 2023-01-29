@@ -5,6 +5,8 @@ schema {
 
 type Query {
   githubProjects: GithubProjects
+  notionGoals: NotionGoals
+  profile: GithubBio
 }
 
 type Tag {
@@ -20,10 +22,19 @@ type Project {
   topics: [String!]!
   deploymentlink: String!
 }
-type NotionGoal{
-  Goals: String!
+
+type NotionGoals{
+  goals: [String!]!
 }
+
 type GithubProjects {
   projects: [Project]!
+  contributorCount: Int!
+}
+
+type GithubBio{
+  position: String!
+  company: String!
+  readme: String!
 }
 

@@ -2,12 +2,19 @@
 
 package model
 
-type GithubProjects struct {
-	Projects []*Project `json:"projects"`
+type GithubBio struct {
+	Position string `json:"position"`
+	Company  string `json:"company"`
+	Readme   string `json:"readme"`
 }
 
-type NotionGoal struct {
-	Goals string `json:"Goals"`
+type GithubProjects struct {
+	Projects         []*Project `json:"projects"`
+	ContributorCount int        `json:"contributorCount"`
+}
+
+type NotionGoals struct {
+	Goals []string `json:"goals"`
 }
 
 type Project struct {

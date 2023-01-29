@@ -41,11 +41,18 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
-	GithubProjects struct {
-		Projects func(childComplexity int) int
+	GithubBio struct {
+		Company  func(childComplexity int) int
+		Position func(childComplexity int) int
+		Readme   func(childComplexity int) int
 	}
 
-	NotionGoal struct {
+	GithubProjects struct {
+		ContributorCount func(childComplexity int) int
+		Projects         func(childComplexity int) int
+	}
+
+	NotionGoals struct {
 		Goals func(childComplexity int) int
 	}
 
@@ -61,6 +68,8 @@ type ComplexityRoot struct {
 
 	Query struct {
 		GithubProjects func(childComplexity int) int
+		NotionGoals    func(childComplexity int) int
+		Profile        func(childComplexity int) int
 	}
 
 	Tag struct {
@@ -70,6 +79,8 @@ type ComplexityRoot struct {
 
 type QueryResolver interface {
 	GithubProjects(ctx context.Context) (*model.GithubProjects, error)
+	NotionGoals(ctx context.Context) (*model.NotionGoals, error)
+	Profile(ctx context.Context) (*model.GithubBio, error)
 }
 
 type executableSchema struct {
@@ -87,6 +98,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
+	case "GithubBio.company":
+		if e.complexity.GithubBio.Company == nil {
+			break
+		}
+
+		return e.complexity.GithubBio.Company(childComplexity), true
+
+	case "GithubBio.position":
+		if e.complexity.GithubBio.Position == nil {
+			break
+		}
+
+		return e.complexity.GithubBio.Position(childComplexity), true
+
+	case "GithubBio.readme":
+		if e.complexity.GithubBio.Readme == nil {
+			break
+		}
+
+		return e.complexity.GithubBio.Readme(childComplexity), true
+
+	case "GithubProjects.contributorCount":
+		if e.complexity.GithubProjects.ContributorCount == nil {
+			break
+		}
+
+		return e.complexity.GithubProjects.ContributorCount(childComplexity), true
+
 	case "GithubProjects.projects":
 		if e.complexity.GithubProjects.Projects == nil {
 			break
@@ -94,12 +133,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GithubProjects.Projects(childComplexity), true
 
-	case "NotionGoal.Goals":
-		if e.complexity.NotionGoal.Goals == nil {
+	case "NotionGoals.goals":
+		if e.complexity.NotionGoals.Goals == nil {
 			break
 		}
 
-		return e.complexity.NotionGoal.Goals(childComplexity), true
+		return e.complexity.NotionGoals.Goals(childComplexity), true
 
 	case "Project.createdon":
 		if e.complexity.Project.Createdon == nil {
@@ -156,6 +195,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GithubProjects(childComplexity), true
+
+	case "Query.notionGoals":
+		if e.complexity.Query.NotionGoals == nil {
+			break
+		}
+
+		return e.complexity.Query.NotionGoals(childComplexity), true
+
+	case "Query.profile":
+		if e.complexity.Query.Profile == nil {
+			break
+		}
+
+		return e.complexity.Query.Profile(childComplexity), true
 
 	case "Tag.language":
 		if e.complexity.Tag.Language == nil {
@@ -221,6 +274,8 @@ schema {
 
 type Query {
   githubProjects: GithubProjects
+  notionGoals: NotionGoals
+  profile: GithubBio
 }
 
 type Tag {
@@ -236,11 +291,20 @@ type Project {
   topics: [String!]!
   deploymentlink: String!
 }
-type NotionGoal{
-  Goals: String!
+
+type NotionGoals{
+  goals: [String!]!
 }
+
 type GithubProjects {
   projects: [Project]!
+  contributorCount: Int!
+}
+
+type GithubBio{
+  position: String!
+  company: String!
+  readme: String!
 }
 
 `, BuiltIn: false},
@@ -304,6 +368,111 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
+func (ec *executionContext) _GithubBio_position(ctx context.Context, field graphql.CollectedField, obj *model.GithubBio) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "GithubBio",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Position, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _GithubBio_company(ctx context.Context, field graphql.CollectedField, obj *model.GithubBio) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "GithubBio",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Company, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _GithubBio_readme(ctx context.Context, field graphql.CollectedField, obj *model.GithubBio) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "GithubBio",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Readme, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _GithubProjects_projects(ctx context.Context, field graphql.CollectedField, obj *model.GithubProjects) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -339,7 +508,7 @@ func (ec *executionContext) _GithubProjects_projects(ctx context.Context, field 
 	return ec.marshalNProject2ᚕᚖgithubᚗcomᚋzenith110ᚋportfiloᚋgraphᚋmodelᚐProject(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _NotionGoal_Goals(ctx context.Context, field graphql.CollectedField, obj *model.NotionGoal) (ret graphql.Marshaler) {
+func (ec *executionContext) _GithubProjects_contributorCount(ctx context.Context, field graphql.CollectedField, obj *model.GithubProjects) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -347,7 +516,42 @@ func (ec *executionContext) _NotionGoal_Goals(ctx context.Context, field graphql
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "NotionGoal",
+		Object:     "GithubProjects",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ContributorCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _NotionGoals_goals(ctx context.Context, field graphql.CollectedField, obj *model.NotionGoals) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "NotionGoals",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -369,9 +573,9 @@ func (ec *executionContext) _NotionGoal_Goals(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.([]string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Project_name(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
@@ -649,6 +853,70 @@ func (ec *executionContext) _Query_githubProjects(ctx context.Context, field gra
 	res := resTmp.(*model.GithubProjects)
 	fc.Result = res
 	return ec.marshalOGithubProjects2ᚖgithubᚗcomᚋzenith110ᚋportfiloᚋgraphᚋmodelᚐGithubProjects(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_notionGoals(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().NotionGoals(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.NotionGoals)
+	fc.Result = res
+	return ec.marshalONotionGoals2ᚖgithubᚗcomᚋzenith110ᚋportfiloᚋgraphᚋmodelᚐNotionGoals(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_profile(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Profile(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.GithubBio)
+	fc.Result = res
+	return ec.marshalOGithubBio2ᚖgithubᚗcomᚋzenith110ᚋportfiloᚋgraphᚋmodelᚐGithubBio(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1887,6 +2155,43 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** object.gotpl ****************************
 
+var githubBioImplementors = []string{"GithubBio"}
+
+func (ec *executionContext) _GithubBio(ctx context.Context, sel ast.SelectionSet, obj *model.GithubBio) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, githubBioImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GithubBio")
+		case "position":
+			out.Values[i] = ec._GithubBio_position(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "company":
+			out.Values[i] = ec._GithubBio_company(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "readme":
+			out.Values[i] = ec._GithubBio_readme(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var githubProjectsImplementors = []string{"GithubProjects"}
 
 func (ec *executionContext) _GithubProjects(ctx context.Context, sel ast.SelectionSet, obj *model.GithubProjects) graphql.Marshaler {
@@ -1903,6 +2208,11 @@ func (ec *executionContext) _GithubProjects(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "contributorCount":
+			out.Values[i] = ec._GithubProjects_contributorCount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -1914,19 +2224,19 @@ func (ec *executionContext) _GithubProjects(ctx context.Context, sel ast.Selecti
 	return out
 }
 
-var notionGoalImplementors = []string{"NotionGoal"}
+var notionGoalsImplementors = []string{"NotionGoals"}
 
-func (ec *executionContext) _NotionGoal(ctx context.Context, sel ast.SelectionSet, obj *model.NotionGoal) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, notionGoalImplementors)
+func (ec *executionContext) _NotionGoals(ctx context.Context, sel ast.SelectionSet, obj *model.NotionGoals) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, notionGoalsImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("NotionGoal")
-		case "Goals":
-			out.Values[i] = ec._NotionGoal_Goals(ctx, field, obj)
+			out.Values[i] = graphql.MarshalString("NotionGoals")
+		case "goals":
+			out.Values[i] = ec._NotionGoals_goals(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -2022,6 +2332,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_githubProjects(ctx, field)
+				return res
+			})
+		case "notionGoals":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_notionGoals(ctx, field)
+				return res
+			})
+		case "profile":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_profile(ctx, field)
 				return res
 			})
 		case "__type":
@@ -2323,6 +2655,21 @@ func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interf
 
 func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {
 	res := graphql.MarshalBoolean(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
+	res, err := graphql.UnmarshalInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -2749,11 +3096,25 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
+func (ec *executionContext) marshalOGithubBio2ᚖgithubᚗcomᚋzenith110ᚋportfiloᚋgraphᚋmodelᚐGithubBio(ctx context.Context, sel ast.SelectionSet, v *model.GithubBio) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._GithubBio(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOGithubProjects2ᚖgithubᚗcomᚋzenith110ᚋportfiloᚋgraphᚋmodelᚐGithubProjects(ctx context.Context, sel ast.SelectionSet, v *model.GithubProjects) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._GithubProjects(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalONotionGoals2ᚖgithubᚗcomᚋzenith110ᚋportfiloᚋgraphᚋmodelᚐNotionGoals(ctx context.Context, sel ast.SelectionSet, v *model.NotionGoals) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._NotionGoals(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOProject2ᚖgithubᚗcomᚋzenith110ᚋportfiloᚋgraphᚋmodelᚐProject(ctx context.Context, sel ast.SelectionSet, v *model.Project) graphql.Marshaler {
