@@ -7,8 +7,14 @@ type Query {
   githubProjects: GithubProjects
   notionGoals: NotionGoals
   profile: GithubBio
+  search(input: searchInput): Articles
 }
 
+input searchInput{
+  term: String!
+  username: String!
+  password: String!
+}
 type Tag {
   language: String!
 }
@@ -38,3 +44,28 @@ type GithubBio{
   readme: String!
 }
 
+type Author {
+  name: String!
+  profile: String!
+  picture: String!
+}
+type Article {
+  title: String!
+  titleCard: String!
+  author: Author!
+  contentData: String!
+  dateWritten: String!
+  url: String!
+  description: String!
+  uuid: String!
+  tags: [ArticleTag!]!
+}
+
+type ArticleTag {
+  tag: String!
+}
+
+type Articles {
+  article: [Article!]!
+  total: Int!
+}
