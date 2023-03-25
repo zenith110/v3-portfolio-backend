@@ -11,18 +11,13 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/gorilla/websocket"
 	"github.com/rs/cors"
-	"github.com/zenith110/Portfolio-Backend/generated"
+	generated "github.com/zenith110/Portfolio-Backend/generated"
 	"github.com/zenith110/Portfolio-Backend/graph"
 )
 
 const defaultPort = "8080"
 
 func main() {
-	// load
-	// err := godotenv.Load(".env")
-	// if err != nil {
-	//     log.Fatalf("err loading: %v", err)
-	// }
 	port := os.Getenv("GRAPHQLPORT")
 	domain := os.Getenv("DOMAIN")
 	environment := os.Getenv("ENV")
