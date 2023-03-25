@@ -95,10 +95,10 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		Articles       func(childComplexity int, input *model.SearchInput) int
 		GithubProjects func(childComplexity int) int
 		NotionGoals    func(childComplexity int) int
 		Profile        func(childComplexity int) int
-		Search         func(childComplexity int, input *model.SearchInput) int
 	}
 
 	Tag struct {
@@ -110,7 +110,7 @@ type QueryResolver interface {
 	GithubProjects(ctx context.Context) (*model.GithubProjects, error)
 	NotionGoals(ctx context.Context) (*model.NotionGoals, error)
 	Profile(ctx context.Context) (*model.GithubBio, error)
-	Search(ctx context.Context, input *model.SearchInput) (*model.Articles, error)
+	Articles(ctx context.Context, input *model.SearchInput) (*model.Articles, error)
 }
 
 type executableSchema struct {
@@ -324,6 +324,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Project.Topics(childComplexity), true
 
+	case "Query.articles":
+		if e.complexity.Query.Articles == nil {
+			break
+		}
+
+		args, err := ec.field_Query_articles_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Articles(childComplexity, args["input"].(*model.SearchInput)), true
+
 	case "Query.githubProjects":
 		if e.complexity.Query.GithubProjects == nil {
 			break
@@ -344,18 +356,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Profile(childComplexity), true
-
-	case "Query.search":
-		if e.complexity.Query.Search == nil {
-			break
-		}
-
-		args, err := ec.field_Query_search_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Search(childComplexity, args["input"].(*model.SearchInput)), true
 
 	case "Tag.language":
 		if e.complexity.Tag.Language == nil {
@@ -427,7 +427,7 @@ type Query {
   githubProjects: GithubProjects
   notionGoals: NotionGoals
   profile: GithubBio
-  search(input: searchInput): Articles
+  articles(input: searchInput): Articles
 }
 
 input searchInput{
@@ -510,7 +510,7 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_search_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_articles_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *model.SearchInput
@@ -1988,8 +1988,8 @@ func (ec *executionContext) fieldContext_Query_profile(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_search(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_search(ctx, field)
+func (ec *executionContext) _Query_articles(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_articles(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2002,7 +2002,7 @@ func (ec *executionContext) _Query_search(ctx context.Context, field graphql.Col
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Search(rctx, fc.Args["input"].(*model.SearchInput))
+		return ec.resolvers.Query().Articles(rctx, fc.Args["input"].(*model.SearchInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2016,7 +2016,7 @@ func (ec *executionContext) _Query_search(ctx context.Context, field graphql.Col
 	return ec.marshalOArticles2ᚖgithubᚗcomᚋzenith110ᚋPortfolioᚑBackendᚋgraphᚋmodelᚐArticles(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_search(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_articles(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -2039,7 +2039,7 @@ func (ec *executionContext) fieldContext_Query_search(ctx context.Context, field
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_search_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_articles_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -4471,7 +4471,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "search":
+		case "articles":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -4480,7 +4480,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_search(ctx, field)
+				res = ec._Query_articles(ctx, field)
 				return res
 			}
 

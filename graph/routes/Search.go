@@ -19,6 +19,7 @@ func ZincSearch(input *model.SearchInput) (*model.Articles, error) {
 	keyword := input.Term
 	username := os.Getenv("ZINCUSERNAME")
 	password := os.Getenv("ZINCPASSWORD")
+	graphqlURL := os.Getenv("BLOGGRAPHQLURL")
 	searchQuery := map[string]string{
 		"query": fmt.Sprintf(`
 			{
@@ -41,7 +42,7 @@ func ZincSearch(input *model.SearchInput) (*model.Articles, error) {
 		`, projectUUID, keyword, username, password),
 	}
 	jsonValue, _ := json.Marshal(searchQuery)
-	request, err := http.NewRequest("POST", "https://cms-backend.abrahannevarez.dev/query", bytes.NewBuffer(jsonValue))
+	request, err := http.NewRequest("POST", graphqlURL, bytes.NewBuffer(jsonValue))
 	client := &http.Client{Timeout: time.Second * 10}
 	response, err := client.Do(request)
 	if err != nil {

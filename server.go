@@ -10,17 +10,19 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
 	"github.com/gorilla/websocket"
+	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 	"github.com/zenith110/Portfolio-Backend/graph"
-	"github.com/zenith110/Portfolio-Backend/graph/generated"
+	generated "github.com/zenith110/Portfolio-Backend/graph/generated"
 )
-
-// generated "github.com/zenith110/Portfolio-Backend/generated"
-// "github.com/zenith110/Portfolio-Backend/graph"
 
 const defaultPort = "8080"
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	port := os.Getenv("GRAPHQLPORT")
 	domain := os.Getenv("DOMAIN")
 	environment := os.Getenv("ENV")
@@ -31,7 +33,7 @@ func main() {
 	router := chi.NewRouter()
 	if environment == "PROD" {
 		router.Use(cors.New(cors.Options{
-			AllowedOrigins:   []string{"https://*abrahannevarez.dev"},
+			AllowedOrigins:   []string{domain},
 			AllowedMethods:   []string{http.MethodGet, http.MethodPost},
 			AllowCredentials: true,
 			Debug:            true,

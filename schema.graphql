@@ -7,7 +7,7 @@ type Query {
   githubProjects: GithubProjects
   notionGoals: NotionGoals
   profile: GithubBio
-  search(input: searchInput): Articles
+  articles(input: searchInput): Articles
 }
 
 input searchInput{

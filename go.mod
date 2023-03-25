@@ -6,6 +6,7 @@ require (
 	github.com/99designs/gqlgen v0.17.27
 	github.com/go-chi/chi v1.5.4
 	github.com/gorilla/websocket v1.5.0
+	github.com/joho/godotenv v1.5.1
 	github.com/rs/cors v1.8.3
 	github.com/shurcooL/githubv4 v0.0.0-20230305132112-efb623903184
 	github.com/vektah/gqlparser/v2 v2.5.1
