@@ -12,8 +12,6 @@ type Query {
 
 input searchInput{
   term: String!
-  username: String!
-  password: String!
 }
 type Tag {
   language: String!
@@ -66,6 +64,6 @@ type ArticleTag {
 }
 
 type Articles {
-  article: [Article!]!
+  articleCollection: [Article!]!
   total: Int!
 }

@@ -11,9 +11,12 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/gorilla/websocket"
 	"github.com/rs/cors"
-	generated "github.com/zenith110/Portfolio-Backend/generated"
 	"github.com/zenith110/Portfolio-Backend/graph"
+	"github.com/zenith110/Portfolio-Backend/graph/generated"
 )
+
+// generated "github.com/zenith110/Portfolio-Backend/generated"
+// "github.com/zenith110/Portfolio-Backend/graph"
 
 const defaultPort = "8080"
 

@@ -59,8 +59,8 @@ type ComplexityRoot struct {
 	}
 
 	Articles struct {
-		Article func(childComplexity int) int
-		Total   func(childComplexity int) int
+		ArticleCollection func(childComplexity int) int
+		Total             func(childComplexity int) int
 	}
 
 	Author struct {
@@ -198,12 +198,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ArticleTag.Tag(childComplexity), true
 
-	case "Articles.article":
-		if e.complexity.Articles.Article == nil {
+	case "Articles.articleCollection":
+		if e.complexity.Articles.ArticleCollection == nil {
 			break
 		}
 
-		return e.complexity.Articles.Article(childComplexity), true
+		return e.complexity.Articles.ArticleCollection(childComplexity), true
 
 	case "Articles.total":
 		if e.complexity.Articles.Total == nil {
@@ -432,8 +432,6 @@ type Query {
 
 input searchInput{
   term: String!
-  username: String!
-  password: String!
 }
 type Tag {
   language: String!
@@ -486,7 +484,7 @@ type ArticleTag {
 }
 
 type Articles {
-  article: [Article!]!
+  articleCollection: [Article!]!
   total: Int!
 }
 `, BuiltIn: false},
@@ -1017,8 +1015,8 @@ func (ec *executionContext) fieldContext_ArticleTag_tag(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Articles_article(ctx context.Context, field graphql.CollectedField, obj *model.Articles) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Articles_article(ctx, field)
+func (ec *executionContext) _Articles_articleCollection(ctx context.Context, field graphql.CollectedField, obj *model.Articles) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Articles_articleCollection(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1031,7 +1029,7 @@ func (ec *executionContext) _Articles_article(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Article, nil
+		return obj.ArticleCollection, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1048,7 +1046,7 @@ func (ec *executionContext) _Articles_article(ctx context.Context, field graphql
 	return ec.marshalNArticle2ᚕgithubᚗcomᚋzenith110ᚋPortfolioᚑBackendᚋgraphᚋmodelᚐArticleᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Articles_article(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Articles_articleCollection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Articles",
 		Field:      field,
@@ -2026,8 +2024,8 @@ func (ec *executionContext) fieldContext_Query_search(ctx context.Context, field
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "article":
-				return ec.fieldContext_Articles_article(ctx, field)
+			case "articleCollection":
+				return ec.fieldContext_Articles_articleCollection(ctx, field)
 			case "total":
 				return ec.fieldContext_Articles_total(ctx, field)
 			}
@@ -4001,7 +3999,7 @@ func (ec *executionContext) unmarshalInputsearchInput(ctx context.Context, obj i
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"term", "username", "password"}
+	fieldsInOrder := [...]string{"term"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4013,22 +4011,6 @@ func (ec *executionContext) unmarshalInputsearchInput(ctx context.Context, obj i
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("term"))
 			it.Term, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "username":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
-			it.Username, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "password":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
-			it.Password, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4168,9 +4150,9 @@ func (ec *executionContext) _Articles(ctx context.Context, sel ast.SelectionSet,
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Articles")
-		case "article":
+		case "articleCollection":
 
-			out.Values[i] = ec._Articles_article(ctx, field, obj)
+			out.Values[i] = ec._Articles_articleCollection(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
