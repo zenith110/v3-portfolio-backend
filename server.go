@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
@@ -19,16 +21,17 @@ const defaultPort = "8080"
 
 func main() {
 	port := os.Getenv("GRAPHQLPORT")
-	domain := os.Getenv("DOMAIN")
+	domainsString := os.Getenv("DOMAINS")
 	environment := os.Getenv("ENV")
-
+	domains := strings.Split(domainsString, ",")
 	if port == "" {
 		port = defaultPort
 	}
+	fmt.Printf("Domains accepted are %s", domains)
 	router := chi.NewRouter()
 	if environment == "PROD" {
 		router.Use(cors.New(cors.Options{
-			AllowedOrigins:   []string{domain},
+			AllowedOrigins:   domains,
 			AllowedMethods:   []string{http.MethodGet, http.MethodPost},
 			AllowCredentials: true,
 			Debug:            true,
