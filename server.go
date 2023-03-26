@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -28,7 +27,7 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
-	fmt.Printf("Domains accepted are %s", domains)
+	log.Printf("Domains accepted are %s", domains)
 	router := chi.NewRouter()
 	if environment == "PROD" {
 		router.Use(cors.New(cors.Options{
