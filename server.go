@@ -10,7 +10,6 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
 	"github.com/gorilla/websocket"
-	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 	"github.com/zenith110/Portfolio-Backend/graph"
 	generated "github.com/zenith110/Portfolio-Backend/graph/generated"
@@ -19,10 +18,6 @@ import (
 const defaultPort = "8080"
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
 	port := os.Getenv("GRAPHQLPORT")
 	domain := os.Getenv("DOMAIN")
 	environment := os.Getenv("ENV")
