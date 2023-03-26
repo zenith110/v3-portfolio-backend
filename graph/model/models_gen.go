@@ -19,8 +19,8 @@ type ArticleTag struct {
 }
 
 type Articles struct {
-	Article []Article `json:"article"`
-	Total   int       `json:"total"`
+	ArticleCollection []Article `json:"articleCollection"`
+	Total             int       `json:"total"`
 }
 
 type Author struct {
@@ -59,7 +59,5 @@ type Tag struct {
 }
 
 type SearchInput struct {
-	Term     string `json:"term"`
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Term string `json:"term"`
 }
