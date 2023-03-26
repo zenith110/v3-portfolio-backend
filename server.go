@@ -15,6 +15,7 @@ import (
 	"github.com/rs/cors"
 	"github.com/zenith110/Portfolio-Backend/graph"
 	generated "github.com/zenith110/Portfolio-Backend/graph/generated"
+	"golang.org/x/exp/slices"
 )
 
 const defaultPort = "8080"
@@ -49,7 +50,7 @@ func main() {
 		Upgrader: websocket.Upgrader{
 			CheckOrigin: func(r *http.Request) bool {
 				// Check against your desired domains here
-				return r.Host == domain
+				return slices.Contains(domains, r.Host)
 			},
 			ReadBufferSize:  1024,
 			WriteBufferSize: 1024,
