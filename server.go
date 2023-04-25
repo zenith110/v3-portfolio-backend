@@ -27,8 +27,7 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
-	log.Printf("Domains accepted are %s", domains)
-	log.Printf("Environment is %s", environment)
+
 	router := chi.NewRouter()
 	if environment == "PROD" {
 		router.Use(cors.New(cors.Options{
