@@ -24,9 +24,10 @@ type Articles struct {
 }
 
 type Author struct {
-	Name    string `json:"name"`
-	Profile string `json:"profile"`
-	Picture string `json:"picture"`
+	Name     string `json:"name"`
+	Profile  string `json:"profile"`
+	Picture  string `json:"picture"`
+	Username string `json:"username"`
 }
 
 type GithubBio struct {

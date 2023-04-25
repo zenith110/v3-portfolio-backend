@@ -8,6 +8,7 @@ type Query {
   notionGoals: NotionGoals
   profile: GithubBio
   articles(input: searchInput): Articles
+  article(article_uuid: String!): Article
 }
 
 input searchInput{
@@ -46,6 +47,7 @@ type Author {
   name: String!
   profile: String!
   picture: String!
+  username: String!
 }
 type Article {
   title: String!

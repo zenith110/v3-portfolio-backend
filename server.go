@@ -4,39 +4,39 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
 	"github.com/gorilla/websocket"
-	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 	"github.com/zenith110/Portfolio-Backend/graph"
 	generated "github.com/zenith110/Portfolio-Backend/graph/generated"
+	"golang.org/x/exp/slices"
 )
 
 const defaultPort = "8080"
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
 	port := os.Getenv("GRAPHQLPORT")
-	domain := os.Getenv("DOMAIN")
+	domainsString := os.Getenv("DOMAINS")
 	environment := os.Getenv("ENV")
-
+	domains := strings.Split(domainsString, ",")
 	if port == "" {
 		port = defaultPort
 	}
+	log.Printf("Domains accepted are %s", domains)
+	log.Printf("Environment is %s", environment)
 	router := chi.NewRouter()
 	if environment == "PROD" {
 		router.Use(cors.New(cors.Options{
-			AllowedOrigins:   []string{domain},
+			AllowedOrigins:   domains,
 			AllowedMethods:   []string{http.MethodGet, http.MethodPost},
 			AllowCredentials: true,
 			Debug:            true,
+			AllowedHeaders:   []string{"Content-Type", "Bearer", "Bearer ", "content-type", "Origin"},
 		}).Handler)
 	} else if environment == "LOCAL" {
 		router.Use(cors.New(cors.Options{
@@ -44,6 +44,7 @@ func main() {
 			AllowedMethods:   []string{http.MethodGet, http.MethodPost},
 			AllowCredentials: true,
 			Debug:            true,
+			AllowedHeaders:   []string{"Content-Type", "Bearer", "Bearer ", "content-type", "Origin"},
 		}).Handler)
 	}
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
@@ -51,7 +52,7 @@ func main() {
 		Upgrader: websocket.Upgrader{
 			CheckOrigin: func(r *http.Request) bool {
 				// Check against your desired domains here
-				return r.Host == domain
+				return slices.Contains(domains, r.Host)
 			},
 			ReadBufferSize:  1024,
 			WriteBufferSize: 1024,

@@ -40,6 +40,12 @@ func (r *queryResolver) Articles(ctx context.Context, input *model.SearchInput) 
 	return articles, err
 }
 
+// Article is the resolver for the article field.
+func (r *queryResolver) Article(ctx context.Context, articleUUID string) (*model.Article, error) {
+	article, err := routes.PublicArticle(articleUUID)
+	return article, err
+}
+
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
